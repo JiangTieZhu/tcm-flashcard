@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f3eee2">
+  <title>中医中药学 · 执业医师闪卡</title>
+  <meta name="description" content="2026版中医执业医师《中药学》考试闪卡，含全部考纲中药、重点分级、考点与易错点。">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="paper-noise" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <a class="brand" href="./" aria-label="中药学闪卡首页">
+      <span class="brand-seal">中</span>
+      <span class="brand-text">
+        <span class="brand-title">中药学 · 闪卡</span>
+        <span class="brand-sub">2026 中医执业医师 · 大纲全收录</span>
+      </span>
+    </a>
+    <div class="top-actions">
+      <button class="icon-btn mobile-only" id="filterToggle" type="button" aria-label="打开筛选" aria-expanded="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M7 12h10M10 17h4"/></svg>
+      </button>
+      <button class="text-btn" id="randomTop" type="button" title="随机抽取一味">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 3h5v5M21 3l-7.5 7.5M8 21H3v-5M3 21l7.5-7.5M21 16v5h-5M16 21l-5-5M3 8V3h5M8 3l5 5"/></svg>
+        随机
+      </button>
+      <button class="text-btn reset-btn" id="resetBtn" type="button" title="回到第一味并清除掌握标记">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5"/></svg>
+        重置
+      </button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <div class="drawer-backdrop" id="drawerBackdrop" hidden></div>
+
+    <aside class="sidebar" id="sidebar" aria-label="学习筛选与进度">
+      <div class="side-head mobile-only">
+        <span>筛选与进度</span>
+        <button class="icon-btn" id="drawerClose" type="button" aria-label="关闭筛选">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </div>
+
+      <section class="side-block progress-block">
+        <div class="side-label-row">
+          <span class="side-label">学习进度</span>
+          <span class="progress-pct" id="progressPct">0%</span>
+        </div>
+        <div class="progress-track" role="progressbar" aria-label="当前筛选下的学习进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progressBar">
+          <span id="progressFill"></span>
+        </div>
+        <div class="progress-detail">
+          <span id="positionText">第 0 / 0 味</span>
+          <span id="masteredText">已掌握 0 味</span>
+        </div>
+      </section>
+
+      <section class="side-block">
+        <label class="side-label" for="searchInput">搜索中药 / 功效 / 主治</label>
+        <div class="search-wrap">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+          <input id="searchInput" type="search" placeholder="如：麻黄、清热、安胎…" autocomplete="off" spellcheck="false">
+          <button class="clear-search" id="clearSearch" type="button" aria-label="清空搜索" hidden>×</button>
+        </div>
+      </section>
+
+      <section class="side-block">
+        <span class="side-label">重点级别</span>
+        <div class="chips" id="priorityChips" role="group" aria-label="按重点级别筛选">
+          <button class="chip is-active" type="button" data-priority="全部">全部 <b data-count="全部">0</b></button>
+          <button class="chip" type="button" data-priority="重点">重点 <b data-count="重点">0</b></button>
+          <button class="chip" type="button" data-priority="次重点">次重点 <b data-count="次重点">0</b></button>
+          <button class="chip" type="button" data-priority="了解">了解 <b data-count="了解">0</b></button>
+        </div>
+        <p class="priority-legend">重点＝大纲“性能·功效·应用” · 次重点＝“功效·主治” · 了解＝“功效”</p>
+      </section>
+
+      <section class="side-block">
+        <label class="side-label" for="categorySelect">药物分类</label>
+        <div class="select-wrap">
+          <select id="categorySelect">
+            <option value="全部">全部分类</option>
+          </select>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10l5 5 5-5"/></svg>
+        </div>
+      </section>
+
+      <section class="side-block side-actions">
+        <button class="wide-btn" id="randomBtn" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 3h5v5M21 3l-7.5 7.5M8 21H3v-5M3 21l7.5-7.5M21 16v5h-5M16 21l-5-5M3 8V3h5M8 3l5 5"/></svg>
+          随机抽一味
+        </button>
+        <p class="save-hint"><span class="dot"></span>学习位置自动保存在本机浏览器</p>
+      </section>
+    </aside>
+
+    <main class="study" id="study">
+      <div class="study-top">
+        <div class="study-meta">
+          <span class="unit-tag" id="unitTag">全部中药</span>
+          <span class="meta-divider">/</span>
+          <span id="cardCounter">0 / 0</span>
+        </div>
+        <button class="master-btn" id="masterBtn" type="button" aria-pressed="false">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.7 5.5 6.1.9-4.4 4.3 1 6.1-5.4-2.9-5.4 2.9 1-6.1L3.2 9.4l6.1-.9L12 3z"/></svg>
+          <span id="masterLabel">标记掌握</span>
+        </button>
+      </div>
+
+      <div class="card-scene">
+        <article class="card" id="card" tabindex="0" role="button" aria-label="中药闪卡，按空格翻面">
+          <section class="card-face card-front" id="cardFront" aria-hidden="false">
+            <div class="front-frame" aria-hidden="true"></div>
+            <div class="front-top">
+              <span class="priority-badge" id="frontPriority" data-priority="重点">重点</span>
+              <span class="card-index">中药 ·  flashcard</span>
+            </div>
+
+            <svg class="herb-art" viewBox="0 0 220 300" aria-hidden="true">
+              <g fill="none" stroke="currentColor" stroke-width="1.2">
+                <path d="M148 286c-8-58-5-121 10-184 5-22 11-43 20-63"/>
+                <path d="M157 213c-25-2-43-14-55-36 24-2 44 11 55 36Z"/>
+                <path d="M153 177c22-2 39-14 50-35-23-1-40 12-50 35Z"/>
+                <path d="M147 139c-20-3-35-14-44-33 20-1 36 11 44 33Z"/>
+                <path d="M162 106c19-3 34-14 43-31-20-1-35 11-43 31Z"/>
+                <path d="M169 75c-14-4-23-14-27-29 14 1 24 12 27 29Z"/>
+                <circle cx="176" cy="45" r="4.2"/>
+              </g>
+            </svg>
+
+            <div class="front-center">
+              <span class="front-eyebrow">中 药</span>
+              <h1 class="herb-name" id="herbName">—</h1>
+              <p class="herb-category" id="herbCategory">—</p>
+            </div>
+
+            <div class="front-bottom">
+              <span class="flip-hint">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 0 1 13.5-5.8L20 8M20 4v4h-4M20 12a8 8 0 0 1-13.5 5.8L4 16M4 20v-4h4"/></svg>
+                点击卡片查看考试要点
+              </span>
+              <span class="seal-mark" aria-hidden="true">必<br>考</span>
+            </div>
+          </section>
+
+          <section class="card-face card-back" id="cardBack" aria-hidden="true">
+            <header class="back-head">
+              <div>
+                <span class="back-eyebrow" id="backCategory">—</span>
+                <h2 id="backName">—</h2>
+              </div>
+              <span class="priority-badge" id="backPriority" data-priority="重点">重点</span>
+            </header>
+
+            <div class="back-scroll" id="backScroll">
+              <div class="info-row info-nature">
+                <span class="info-key">性</span>
+                <div><span class="info-label">性味归经</span><p id="natureText">—</p></div>
+              </div>
+              <div class="info-row info-effects">
+                <span class="info-key">效</span>
+                <div><span class="info-label">功效</span><p id="effectsText">—</p></div>
+              </div>
+              <div class="info-row">
+                <span class="info-key">主</span>
+                <div><span class="info-label">主治</span><p id="indicationsText">—</p></div>
+              </div>
+              <div class="info-grid">
+                <div class="info-row compact">
+                  <span class="info-key">用</span>
+                  <div><span class="info-label">用法用量</span><p id="usageText">—</p></div>
+                </div>
+                <div class="info-row compact">
+                  <span class="info-key">忌</span>
+                  <div><span class="info-label">使用注意</span><p id="cautionText">—</p></div>
+                </div>
+              </div>
+
+              <div class="exam-block point-block">
+                <div class="exam-title"><span>考</span>高频考点</div>
+                <p id="pointsText">—</p>
+              </div>
+              <div class="exam-block trap-block">
+                <div class="exam-title"><span>坑</span>易错点</div>
+                <p id="trapText">—</p>
+              </div>
+            </div>
+
+            <footer class="back-foot">
+              <span>空格 / 点击按钮翻回</span>
+              <button class="back-flip-btn" id="backFlipBtn" type="button">返回正面</button>
+            </footer>
+          </section>
+        </article>
+
+        <div class="empty-state" id="emptyState" hidden>
+          <span class="empty-seal">查</span>
+          <h2>没有匹配的中药</h2>
+          <p>换一个关键词，或恢复“全部”筛选。</p>
+          <button class="wide-btn" id="clearFilters" type="button">清除筛选</button>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="nav-btn" id="prevBtn" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+          上一味
+        </button>
+        <button class="flip-btn" id="flipBtn" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 0 1 13.5-5.8L20 8M20 4v4h-4M20 12a8 8 0 0 1-13.5 5.8L4 16M4 20v-4h4"/></svg>
+          翻面
+        </button>
+        <button class="nav-btn" id="nextBtn" type="button">
+          下一味
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+
+      <div class="keyboard-hints">
+        <span><kbd>←</kbd><kbd>→</kbd> 切换</span>
+        <span><kbd>空格</kbd> 翻面</span>
+        <span><kbd>M</kbd> 掌握</span>
+        <span><kbd>R</kbd> 随机</span>
+      </div>
+    </main>
+  </div>
+
+  <div class="loading" id="loading">
+    <div class="loading-seal">药</div>
+    <p>正在展开药匣…</p>
+  </div>
+
+  <div class="error-panel" id="errorPanel" hidden>
+    <span class="error-seal">!</span>
+    <h2>药匣未能打开</h2>
+    <p id="errorText">请通过本地服务器访问本页，而不是直接双击 HTML 文件。</p>
+    <code>python3 -m http.server 8000</code>
+    <p class="error-sub">然后访问 <a href="http://localhost:8000">http://localhost:8000</a></p>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
