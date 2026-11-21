@@ -14,6 +14,7 @@ concurrency:
   group: pages
   cancel-in-progress: true
 
+# 使用前需在仓库 Settings → Pages → Source 中选择 “GitHub Actions”
 jobs:
   deploy:
     environment:
@@ -32,6 +33,11 @@ jobs:
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
+        with:
+          # 首次运行若 Pages 站点尚未创建，尝试自动创建
+          enablement: true
+          # 可选：若自动创建失败，在仓库 Secrets 中添加 PAGES_TOKEN（Pages 读写权限）
+          token: ${{ secrets.PAGES_TOKEN || github.token }}
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
